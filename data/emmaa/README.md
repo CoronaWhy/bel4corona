@@ -12,7 +12,7 @@ Graph this data in your scripts with:
 import pybel
 import requests
 
-URL = 'https://github.com/CoronaWhy/bel4corona/raw/master/data/emmaa/covid19-indra.bel.nodelink.json'
+URL = 'https://github.com/CoronaWhy/bel4corona/raw/master/data/emmaa/covid19-indra-grounded.bel.nodelink.json'
 res = requests.get(URL)
 res_json = res.json()
 graph = pybel.from_nodelink(res_json)
