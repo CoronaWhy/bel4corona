@@ -2,16 +2,16 @@
 
 """Tools for acquiring and normalizing the content from Fraunhofer."""
 
+import click
 import json
 import os
 from urllib.request import urlretrieve
 
-import click
-
-import pybel.grounding
+import pybel
 
 HERE = os.path.abspath(os.path.dirname(__file__))
-URL = 'https://raw.githubusercontent.com/covid19kg/covid19kg/master/covid19kg/_cache.bel.nodelink.json'
+COMMIT = 'd3c57d0e324886288d5e25c7388bcfdba62f31dd'
+URL = f'https://github.com/covid19kg/covid19kg/raw/{COMMIT}/covid19kg/_cache.bel.nodelink.json'
 RAW_PATH = os.path.join(HERE, 'covid19-fraunhofer-raw.bel.nodelink.json')
 GROUNDED_PATH = os.path.join(HERE, 'covid19-fraunhofer-grounded.bel.nodelink.json')
 
@@ -26,9 +26,10 @@ def main(force: bool, user: str, password: str):
         if not os.path.exists(RAW_PATH) and not force:
             urlretrieve(URL, RAW_PATH)
         graph = pybel.load(RAW_PATH)
+        graph.version = COMMIT
 
         # This will probably not work for you (yet!)
-        graph = pybel.grounding.ground(graph)
+        graph = graph.ground()
         graph.summarize()
 
         pybel.dump(graph, GROUNDED_PATH)
